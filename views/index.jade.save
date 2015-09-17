@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+    form(method='post',action='')
+        label(for='username') Userame:
+        input(type='text',name='username',id='username')
+        
+        select
+           repeation = [ 'OKCupid', 'Tinder', 'Hinge', 'Grindr']
+           for item in repeation
+              if job.repeat == item
+                 option(selected="true") #{item}
+              else
+                 option #{item}
+
+        label(for='site') Dating Site:
+        input(type='text',name='site',id='site')  
+
+        label(for='would_do') Would Do Again:
+        input(type='checkbox',name='would_do',id='would_do') 
+ 
+        label(for='crazy_rating') Crazy Rating:
+        input(type='text',name='crazy_rating',id='crazy_rating')
+  
+        label(for='hot_rating') Hot Rating:
+        input(type='text',name='hot_rating',id='hot_rating')  
+
+        input(type='submit',name='submit',value='Submit').submit-button

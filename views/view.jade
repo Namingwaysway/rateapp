@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{ratings}
+
+
+    form(method='post',action='')
+        label(for='would_do') Would Do Again:
+        input(type='checkbox',name='would_do',id='would_do') 
+ 
+        label(for='crazy_rating') Crazy Rating:
+        input(type='text',name='crazy_rating',id='crazy_rating')
+  
+        label(for='hot_rating') Hot Rating:
+        input(type='text',name='hot_rating',id='hot_rating')  
+
+        label(for='hot_rating') Comments:
+        input(type='text',name='comments',id='comments')  
+
+each rating in #{ratings}
+  p Username: rating.username
+  p Site: rating.site
+  p Would Do Again: rating.would_do
+  p Hot Rating: rating.hot_rating
+  p Crazy Rating: rating.crazy_rating
+  p Comments: rating.comments

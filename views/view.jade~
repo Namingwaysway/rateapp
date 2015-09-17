@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{ratings}
+
+each rating in #{ratings}
+  p Username: rating.username
+  p Site: rating.site
+  p Would Do Again: rating.would_do
+  p Hot Rating: rating.hot_rating
+  p Crazy Rating: rating.crazy_rating
