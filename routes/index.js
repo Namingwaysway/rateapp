@@ -14,6 +14,7 @@ router.get('/', function(req, res, next) {
 
 function listusr(req, res){
     var arr = req.params.id.split("@");
+    console.log(arr);
     db.all("SELECT * FROM ratings WHERE username='" + arr[0] + "' AND site='" + arr[1] + "'",
         function(err, row) {
             if(err !== null) {
@@ -21,13 +22,25 @@ function listusr(req, res){
             }
             else {
                 console.log(row);
-                res.render('view.jade', {ratings: row}, function(err, html) {
-                    res.send(200, html);
+                res.render('view.jade', {ratings: row, username: arr[0], site: arr[1]}, function(err, html) {
+                    res.status(200).send(html);
                 });
             }
         }
     );
 }
+
+
+function listusr_redir(req, res){
+    var arr = req.params.id.split("@");
+    console.log(arr);
+    response.writeHead(301,
+      {Location: '/users/'+arr[0]+'@'+arr[1]}
+    );
+    response.end();
+}
+
+
 
 router.get('/users/:id', listusr);
 
@@ -45,17 +58,24 @@ router.get('/users/:id', listusr);
 */
 // We define a new route that will handle bookmark creation
 router.post('/users/:id', function(req, res, next) {
-  username = req.body.username;
-  site = req.body.site;
+  var arr = req.params.id.split("@");
+  console.log(arr);
+  username = arr[0];
+  site = arr[1];
   would_do = req.body.would_do;
   crazy_rating = req.body.crazy_rating;
   hot_rating = req.body.hot_rating;
+  comments = req.body.hot_rating;
+  display_name = req.body.display_name;
   fbid = 0;
-  ip = request.connection.remoteAddress;
-  sqlRequest = "INSERT INTO 'ratings' (ip, fbid, username, site, would_do, crazy_rating, hot_rating, timestamp) " +
-               "VALUES('" + ip + "', '" + fbid + "', '" + username + "', '" + site  + "', '" + would_do + "', '" + crazy_rating + "', '" + 		       hot_rating + "', datetime())";
+  ip = req.connection.remoteAddress;
+  sqlRequest = "INSERT INTO 'ratings' (comments, ip, display_name, username, site, would_do, crazy_rating, hot_rating, timestamp) " +
+               "VALUES('" + comments + "', '" + ip + "', '" + display_name + "', '" + username + "', '" + site  + "', '" + would_do + "', '" + crazy_rating + "', '" + hot_rating + "', datetime())";
+  
+  console.log(sqlRequest);
   db.run(sqlRequest, function(err) {
     if(err !== null) {
+      console.log(err);
       next(err);
     } else {
       res.redirect('back');

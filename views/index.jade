@@ -4,11 +4,13 @@ block content
   h1= title
   p Welcome to #{title}
 
-    form(method='post',action='')
+    form(method='post',action='/users/', onsubmit="window.location.href = '/users/' + document.getElementById('username').value + '@' + document.getElementById('site_select').value; return false;")
         label(for='username') Userame:
         input(type='text',name='username',id='username')
-        
-        label(for='site') Dating Site:
-        input(type='text',name='site',id='site')  
 
-        input(type='submit',name='submit',value='Submit').submit-button
+        label(for='username') Site:
+        select(name='site_select', id='site_select')
+            each site, i in sites
+                option(value='#{site}') #{site}
+
+        input(type='button',name='submit',value='Submit', onclick="window.location.href = '/users/' + document.getElementById('username').value + '@' + document.getElementById('site_select').value;").

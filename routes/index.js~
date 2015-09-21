@@ -61,6 +61,6 @@ router.post('/users/:id', function(req, res, next) {
       res.redirect('back');
     }
   });
-}, listuser);
+}, listusr);
 
 module.exports = router;

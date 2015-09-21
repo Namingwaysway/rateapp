@@ -22,13 +22,12 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='ratings'",
     db.run('CREATE TABLE "ratings" ' +
            '("id" INTEGER PRIMARY KEY AUTOINCREMENT, ' +
            '"ip" VARCHAR(255), ' +
-           '"fbid" VARCHAR(255), ' +
            '"username" VARCHAR(255), ' +
            '"site" VARCHAR(255), ' +
-           '"would_do" INTEGER, ' +
            '"crazy_rating" INTEGER, ' +
            '"hot_rating" INTEGER, ' +
            '"timestamp" INTEGER, ' +
+           '"display_name" VARCHAR(255), ' +
            'comments VARCHAR(1024))', function(err) {
       if(err !== null) {
         console.log(err);
@@ -85,7 +84,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
-    error: {}
+    error: err
   });
 });
 

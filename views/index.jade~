@@ -9,6 +9,6 @@ block content
         input(type='text',name='username',id='username')
         
         label(for='site') Dating Site:
-        input(type='text',name='site',id='site') 
+        input(type='text',name='site',id='site')  
 
         input(type='submit',name='submit',value='Submit').submit-button
