@@ -2,13 +2,25 @@ extends layout
 
 block content
   h1= title
-  p Ratings for #{username}@#{site}
+  #spacer(style = "height: 50px")
+  #main_box(style = "width: 80%; margin: auto;")
 
-
+    #profile_box(style="height: 200px; margin: auto; padding: 15px;")
+      div(id="photo" style="width: 200px; height: 200px; float: left;")
+        img(src="none", width="150", height="150")
+      div(id="username", style="vertical-align: text-top;")
+        br
+        h4 Ratings for #{username}@#{site}
+        br
+        |Personality: #{average_pers}/10
+        br
+        |Looks: #{average_hot}/10
+    
+    br
     form(method='post',action='')
 
       p
-      label(for='crazy_rating') Looks [out of 10:
+      label(for='crazy_rating') Looks [out of 10]:
       input(type='text',name='crazy_rating',id='crazy_rating')
 
       p
@@ -17,7 +29,7 @@ block content
 
       p
       label(for='comments') Comments:
-      input(type='text',name='comments',id='comments')  
+      textarea(name='comments',id='comments', rows='10', cols='50')  
 
       p
       label(for='display_name') How your rating appears:

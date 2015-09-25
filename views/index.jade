@@ -5,12 +5,21 @@ block content
   #spacer(style = "height: 150px")
   #mainpanel(style = "width: 600px; margin: auto;")
     .panel.panel-default
-      .panel-heading Amperstand
-      .panel-body.height(style="height: 200px; text-align: center;")
-          #amperstand(style = "  position: relative; \
-                                  left: -100px; \
-                                  top: -150px;")
-            hellooooooooooooooooooooooooooooooooooooo
+      .panel-heading(style = "padding: 3px;")
+        #amperstand(style = "  position: relative; \
+                                left: 10px; \
+                                top: -140px; \
+                                text-align:left;\
+                                font-size:1900%;\
+                                float: left; \
+                                height: 100px;\
+                                z-index: 10;")
+          |&
+        #boxtitle(style = "font-size:300%; \
+                            position: relative;\
+                            left: -40px;")
+          |Amperstand
+      .panel-body.height(style="height: 150px; text-align: center;")
           form(method='post',action='/users/', onsubmit="window.location.href = '/users/' + document.getElementById('username').value + '@' + document.getElementById('site_select').value; return false;")
               input(type='text',name='username',id='username',placeholder='Username')
               span(style="font-size:200%")
@@ -20,14 +29,14 @@ block content
                       option(value='#{site}') #{site}
 
               input(type='button',name='submit',value='Submit', onclick="window.location.href = '/users/' + document.getElementById('username').value + '@' + document.getElementById('site_select').value;").
-
+    hr
     #footer(style = "width: 600px; margin: auto; text-align: center;")
-      Amperstand lets you rate the people you date.
+      |Amperstand lets you rate the people you date.
       br
-      Check out profiles before you date!
+      |Check out profiles before you date!
       br
-      Let other people know how things went!
+      |Let other people know how things went!
       br
-      All anonymously!
+      |All anonymously!
       br
-      © Ravioli Labs, llc.
+      |© Ravioli Labs, llc.

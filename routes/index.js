@@ -15,14 +15,24 @@ router.get('/', function(req, res, next) {
 function listusr(req, res){
     var arr = req.params.id.split("@");
     console.log(arr);
-    db.all("SELECT * FROM ratings WHERE username='" + arr[0] + "' AND site='" + arr[1] + "'",
+    db.all("SELECT * FROM ratings WHERE username='" + arr[0].toLowerCase() + "' AND site='" + arr[1].toLowerCase() + "'",
         function(err, row) {
             if(err !== null) {
                 next(err);
             }
             else {
                 console.log(row);
-                res.render('view.jade', {ratings: row, username: arr[0], site: arr[1]}, function(err, html) {
+                var average_hot = 0;
+                var average_pers = 0;
+                for (i = 0; i < row.length; i++) { 
+                  average_hot += row[i].hot_rating;
+                  average_pers += row[i].crazy_rating;
+                }
+                average_hot/=row.length;
+                average_pers/=row.length;
+                console.log(average_pers);
+                console.log(average_hot);
+                res.render('view.jade', {ratings: row, username: arr[0].toLowerCase(), site: arr[1].toLowerCase(), average_hot: average_hot, average_pers: average_pers}, function(err, html) {
                     res.status(200).send(html);
                 });
             }
@@ -35,7 +45,7 @@ function listusr_redir(req, res){
     var arr = req.params.id.split("@");
     console.log(arr);
     response.writeHead(301,
-      {Location: '/users/'+arr[0]+'@'+arr[1]}
+      {Location: '/users/'+arr[0].toLowerCase()+'@'+arr[1].toLowerCase()}
     );
     response.end();
 }
@@ -60,17 +70,19 @@ router.get('/users/:id', listusr);
 router.post('/users/:id', function(req, res, next) {
   var arr = req.params.id.split("@");
   console.log(arr);
-  username = arr[0];
-  site = arr[1];
-  would_do = req.body.would_do;
+  username = arr[0].toLowerCase();
+  site = arr[1].toLowerCase();
   crazy_rating = req.body.crazy_rating;
   hot_rating = req.body.hot_rating;
-  comments = req.body.hot_rating;
+  comments = req.body.comments;
   display_name = req.body.display_name;
   fbid = 0;
   ip = req.connection.remoteAddress;
-  sqlRequest = "INSERT INTO 'ratings' (comments, ip, display_name, username, site, would_do, crazy_rating, hot_rating, timestamp) " +
-               "VALUES('" + comments + "', '" + ip + "', '" + display_name + "', '" + username + "', '" + site  + "', '" + would_do + "', '" + crazy_rating + "', '" + hot_rating + "', datetime())";
+
+  //if(typeof array != "undefined" && array != null && array.length > 0){}
+  
+  sqlRequest = "INSERT INTO 'ratings' (comments, ip, display_name, username, site, crazy_rating, hot_rating, timestamp) " +
+               "VALUES('" + comments + "', '" + ip + "', '" + display_name + "', '" + username + "', '" + site  +  "', '" + crazy_rating + "', '" + hot_rating + "', datetime())";
   
   console.log(sqlRequest);
   db.run(sqlRequest, function(err) {
@@ -82,5 +94,11 @@ router.post('/users/:id', function(req, res, next) {
     }
   });
 }, listusr);
+
+router.get('/about/', function(req, res, next){
+res.render('about.jade', {}, function(err, html) {
+                    res.status(200).send(html);
+                });
+});
 
 module.exports = router;
