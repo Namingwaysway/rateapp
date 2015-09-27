@@ -6,15 +6,25 @@ var db = new sqlite3.Database('cozy.db');
 console.log(db)
 router.get('/', function(req, res, next) {
 
-      sites = ['OKCupid','Tinder','Hinge','Match']
-      res.render('index.jade', {sites: sites}, function(err, html) {
-        res.send(200, html);
-      });
+      index_error(req, res, null, next);
 });
 
+function index_error(req, res, err, next){
+  sites = ['OKCupid','Tinder','Hinge','Match']
+  res.render('index.jade', {sites: sites, error: err}, function(err, html) {
+    res.send(200, html);
+  });
+}
+
+
 function listusr(req, res){
+    console.log(req);
     var arr = req.params.id.split("@");
-    console.log(arr);
+    var matches1 = arr[0].match(/^[a-zA-Z0-9_-]{1,25}$/);
+    var matches2 = arr[1].match(/^[a-zA-Z0-9_-]{1,25}$/);
+    if (matches1 == null || matches2 == null){
+      index_error(req, res, "Invalid Username", null);
+    }
     db.all("SELECT * FROM ratings WHERE username='" + arr[0].toLowerCase() + "' AND site='" + arr[1].toLowerCase() + "'",
         function(err, row) {
             if(err !== null) {
@@ -24,12 +34,14 @@ function listusr(req, res){
                 console.log(row);
                 var average_hot = 0;
                 var average_pers = 0;
-                for (i = 0; i < row.length; i++) { 
-                  average_hot += row[i].hot_rating;
-                  average_pers += row[i].crazy_rating;
+                if (row.length){
+                  for (i = 0; i < row.length; i++) { 
+                    average_hot += row[i].hot_rating;
+                    average_pers += row[i].crazy_rating;
+                  }
+                  average_hot/=row.length;
+                  average_pers/=row.length;
                 }
-                average_hot/=row.length;
-                average_pers/=row.length;
                 console.log(average_pers);
                 console.log(average_hot);
                 res.render('view.jade', {ratings: row, username: arr[0].toLowerCase(), site: arr[1].toLowerCase(), average_hot: average_hot, average_pers: average_pers}, function(err, html) {
@@ -69,6 +81,12 @@ router.get('/users/:id', listusr);
 // We define a new route that will handle bookmark creation
 router.post('/users/:id', function(req, res, next) {
   var arr = req.params.id.split("@");
+  var matches1 = arr[0].match(/^[a-zA-Z0-9_-]{1,25}$/);
+  var matches2 = arr[1].match(/^[a-zA-Z0-9_-]{1,25}$/);
+  var matches3 = req.body.display_name.match(/^[a-zA-Z0-9_-]{1,25}$/);
+  if (matches1 == null || matches2 == null || matches3 == null){
+    res.redirect('back');
+  }
   console.log(arr);
   username = arr[0].toLowerCase();
   site = arr[1].toLowerCase();
@@ -80,6 +98,8 @@ router.post('/users/:id', function(req, res, next) {
   ip = req.connection.remoteAddress;
 
   //if(typeof array != "undefined" && array != null && array.length > 0){}
+  comments = comments.replace(/"/g, "");
+  comments = comments.replace(/'/g, "");
   
   sqlRequest = "INSERT INTO 'ratings' (comments, ip, display_name, username, site, crazy_rating, hot_rating, timestamp) " +
                "VALUES('" + comments + "', '" + ip + "', '" + display_name + "', '" + username + "', '" + site  +  "', '" + crazy_rating + "', '" + hot_rating + "', datetime())";

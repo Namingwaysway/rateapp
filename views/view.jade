@@ -17,32 +17,44 @@ block content
         |Looks: #{average_hot}/10
     
     br
-    form(method='post',action='')
-
-      p
-      label(for='crazy_rating') Looks [out of 10]:
-      input(type='text',name='crazy_rating',id='crazy_rating')
-
-      p
-      label(for='hot_rating') Personality [out of 10]:
-      input(type='text',name='hot_rating',id='hot_rating')  
-
-      p
-      label(for='comments') Comments:
-      textarea(name='comments',id='comments', rows='10', cols='50')  
-
-      p
-      label(for='display_name') How your rating appears:
-      input(type='text',name='display_name',id='display_name')  
-
-      p
-      input(type='submit',name='submit',id='submit', value="Rate!").
 
   if ratings
     for rating in ratings
-      p Looks: #{rating.hot_rating}/10
-      p Personality: #{rating.crazy_rating}/10
-      p Comments: #{rating.comments}
-      p Rated By: #{rating.display_name}
+      .panel.panel-default(style = "width: 70%; margin: auto;")
+        .panel-heading(style = "padding: 3px;")
+          #boxtitle(style = "font-size:110%; \
+                              position: relative; \
+                              text-align: right;")
+            span(style="float:left;") #{rating.display_name}
+            span(style="text-align:right;") Looks: #{rating.hot_rating}/10 - #{rating.crazy_rating}/10
+        .panel-body.height(style="text-align: left ;")
+          |#{rating.comments}
+      br
   else
     p No messages
+
+  form(method='post',action='')
+    .panel.panel-default(style = "width: 70%; margin: auto;")
+      .panel-heading(style = "padding: 3px;")
+        #boxtitle(style = "font-size:110%; \
+                            position: relative; \
+                            text-align: left;")
+          |Comment
+      .panel-body.height(style="text-align: left;")
+        label(for='crazy_rating') Looks [out of 10]:
+        input(type='text',name='crazy_rating',id='crazy_rating',max_length='2',size='2',style='width:2em;')
+
+        br
+        label(for='hot_rating') Personality [out of 10]:
+        input(type='text',name='hot_rating',id='hot_rating',max_length='2',size='2')  
+
+        p
+        label(for='comments') Comments:
+        textarea(name='comments',id='comments', rows='5', cols='50')  
+
+        p
+        label(for='display_name') How your rating appears:
+        input(type='text',name='display_name',id='display_name')  
+
+        p
+        input(type='submit',name='submit',id='submit', value="Rate!").

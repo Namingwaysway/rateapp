@@ -2,7 +2,11 @@ extends layout
 
 block content
   h1= title
-  #spacer(style = "height: 150px")
+  #spacer(style = "height: 50px")
+  if error
+    #error_bar(style = "width: 600px; margin: auto; color: red;")
+      |#{error}
+  #spacer(style = "height: 100px")
   #mainpanel(style = "width: 600px; margin: auto;")
     .panel.panel-default
       .panel-heading(style = "padding: 3px;")
