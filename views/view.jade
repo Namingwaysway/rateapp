@@ -6,8 +6,9 @@ block content
   #main_box(style = "width: 80%; margin: auto;")
 
     #profile_box(style="height: 200px; margin: auto; padding: 15px;")
-      div(id="photo" style="width: 200px; height: 200px; float: left;")
-        img(src="none", width="150", height="150")
+      div(id="photo",style="width: 200px; height: 200px; float: left;")
+        img(id="user_image",src="#{img_url}", \
+              width="150", height="150", onLoad="httpGetImg();",style="padding:1px;border:1px solid #021a40;")
       div(id="username", style="vertical-align: text-top;")
         br
         h4 Ratings for #{username}@#{site}

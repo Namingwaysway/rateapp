@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('cozy.db');
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 console.log(db)
 router.get('/', function(req, res, next) {
@@ -18,13 +19,26 @@ function index_error(req, res, err, next){
 
 
 function listusr(req, res){
-    console.log(req);
     var arr = req.params.id.split("@");
     var matches1 = arr[0].match(/^[a-zA-Z0-9_-]{1,25}$/);
     var matches2 = arr[1].match(/^[a-zA-Z0-9_-]{1,25}$/);
     if (matches1 == null || matches2 == null){
       index_error(req, res, "Invalid Username", null);
     }
+
+    url = "none"
+    /*
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", "http://www.okcupid.com/profile/#{username}", true); // will fail if not logged in to okc
+    xmlHttp.send(null);
+    var index = xmlHttp.responseText.indexOf("http://k0.okccdn.com/php/load_okc_image.php");
+    var sub_str = xmlHttp.responseText.slice(index,xmlHttp.responseText.length);
+    var last_index = sub_str.indexOf("\"");
+    var url = sub_str.slice(0,last_index);
+
+    console.log(xmlHttp.responseText)
+    */
+
     db.all("SELECT * FROM ratings WHERE username='" + arr[0].toLowerCase() + "' AND site='" + arr[1].toLowerCase() + "'",
         function(err, row) {
             if(err !== null) {
@@ -44,7 +58,7 @@ function listusr(req, res){
                 }
                 console.log(average_pers);
                 console.log(average_hot);
-                res.render('view.jade', {ratings: row, username: arr[0].toLowerCase(), site: arr[1].toLowerCase(), average_hot: average_hot, average_pers: average_pers}, function(err, html) {
+                res.render('view.jade', {img_url: url, ratings: row, username: arr[0].toLowerCase(), site: arr[1].toLowerCase(), average_hot: average_hot, average_pers: average_pers}, function(err, html) {
                     res.status(200).send(html);
                 });
             }
