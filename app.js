@@ -12,6 +12,8 @@ var users = require('./routes/users');
 
 var app = express();
 
+app.set('port', process.env.PORT || 80);
+
 // Database initialization
 db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='ratings'",
        function(err, rows) {
