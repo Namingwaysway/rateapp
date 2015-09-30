@@ -1,28 +1,22 @@
 extends layout
 
 block content
-  h1= title
+  script(src="/scripts/img_fade.js")
   #spacer(style = "height: 50px")
   if error
     #error_bar(style = "width: 600px; margin: auto; color: red;")
       |#{error}
-  #spacer(style = "height: 100px")
-  #mainpanel(style = "width: 600px; margin: auto;")
-    .panel.panel-default
-      .panel-heading(style = "padding: 3px;")
-        #amperstand(style = "  position: relative; \
-                                left: 10px; \
-                                top: -140px; \
-                                text-align:left;\
-                                font-size:1900%;\
-                                float: left; \
-                                height: 100px;\
-                                z-index: 10;")
-          |&
-        #boxtitle(style = "font-size:300%; \
+  #spacer(style = "height: 100px; background-color: transparent;")
+  #mainpanel(style = "width: 728px; margin: auto; background-color: transparent;")
+    .panel.panel-default(style="width:600px; margin:auto;")
+      .panel-heading(style = "padding: 0px; margin: 0px;")
+        #boxtitle(style = "font-size:200%; \
                             position: relative;\
-                            left: -40px;")
-          |Amperstand
+                            left: 0px;\
+                            padding: 10px;")
+          |Last night was...
+          span(id="rotate", style="float:right;")
+            |Great :)
       .panel-body.height(style="height: 150px; text-align: center;")
           form(method='post',action='/users/', onsubmit="window.location.href = '/users/' + document.getElementById('username').value + '@' + document.getElementById('site_select').value; return false;")
               input(type='text',name='username',id='username',placeholder='Username')
@@ -33,9 +27,20 @@ block content
                       option(value='#{site}') #{site}
 
               input(type='button',name='submit',value='Submit', onclick="window.location.href = '/users/' + document.getElementById('username').value + '@' + document.getElementById('site_select').value;").
-    hr
+    br
+    #bot_ad(style = "width: 728px; margin: auto; text-align: center;")
+      |<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      |<!-- Bottom Banner -->
+      |<ins class="adsbygoogle"
+      |     style="display:inline-block;width:728px;height:90px"
+      |     data-ad-client="ca-pub-8330866860987154"
+      |     data-ad-slot="6518491421"></ins>
+      |<script>
+      |(adsbygoogle = window.adsbygoogle || []).push({});
+      |</script>
+    br
     #footer(style = "width: 600px; margin: auto; text-align: center;")
-      |Amperstand lets you rate the people you date.
+      |Last Night Was... lets you rate the people you date.
       br
       |Check out profiles before you date!
       br
