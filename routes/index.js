@@ -3,6 +3,8 @@ var router = express.Router();
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('cozy.db');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var models  = require('../models');
+var ratings = models.ratings;
 
 console.log(db)
 router.get('/', function(req, res, next) {
@@ -11,9 +13,17 @@ router.get('/', function(req, res, next) {
 });
 
 function index_error(req, res, err, next){
-  sites = ['OKCupid','Tinder','Hinge','Match']
-  res.render('index.jade', {sites: sites, error: err}, function(err, html) {
-    res.send(200, html);
+  sites = ['OKCupid','Hinge','Match']
+  ratings.findAll({ limit: 10, order: 'timestamp DESC', where: {
+                                                        comments:{$notLike: 'None.'},
+                                                        comments:{$notLike: ''},
+                                                        comments:{$notLike: ' '}
+                                                      } 
+  }).then( function(rows){
+    console.log(rows);
+    res.render('index.jade', {sites: sites, error: err, recent: rows}, function(err, html) {
+      res.send(200, html);
+    });
   });
 }
 
@@ -38,30 +48,30 @@ function listusr(req, res){
 
     console.log(xmlHttp.responseText)
     */
-
-    db.all("SELECT * FROM ratings WHERE username='" + arr[0].toLowerCase() + "' AND site='" + arr[1].toLowerCase() + "'",
-        function(err, row) {
-            if(err !== null) {
-                next(err);
+    console.log(models)
+    models.ratings.findAll({
+      where: {
+        username: arr[0].toLowerCase(),
+        site: arr[1].toLowerCase()
+      }
+    }).then(
+        function(row) {
+            console.log(row);
+            var average_hot = 0;
+            var average_pers = 0;
+            if (row.length){
+              for (i = 0; i < row.length; i++) { 
+                average_hot += row[i].hot_rating;
+                average_pers += row[i].crazy_rating;
+              }
+              average_hot/=row.length;
+              average_pers/=row.length;
             }
-            else {
-                console.log(row);
-                var average_hot = 0;
-                var average_pers = 0;
-                if (row.length){
-                  for (i = 0; i < row.length; i++) { 
-                    average_hot += row[i].hot_rating;
-                    average_pers += row[i].crazy_rating;
-                  }
-                  average_hot/=row.length;
-                  average_pers/=row.length;
-                }
-                console.log(average_pers);
-                console.log(average_hot);
-                res.render('view.jade', {img_url: url, ratings: row, username: arr[0].toLowerCase(), site: arr[1].toLowerCase(), average_hot: average_hot, average_pers: average_pers}, function(err, html) {
-                    res.status(200).send(html);
-                });
-            }
+            console.log(average_pers);
+            console.log(average_hot);
+            res.render('view.jade', {img_url: url, ratings: row, username: arr[0].toLowerCase(), site: arr[1].toLowerCase(), average_hot: average_hot, average_pers: average_pers}, function(err, html) {
+                res.status(200).send(html);
+            });
         }
     );
 }
@@ -101,7 +111,7 @@ router.post('/users/:id', function(req, res, next) {
   if (matches1 == null || matches2 == null || matches3 == null){
     res.redirect('back');
   }
-  console.log(arr);
+  console.log(req.body);
   username = arr[0].toLowerCase();
   site = arr[1].toLowerCase();
   crazy_rating = req.body.crazy_rating;
@@ -111,21 +121,38 @@ router.post('/users/:id', function(req, res, next) {
   fbid = 0;
   ip = req.connection.remoteAddress;
 
+  var xmlHttp = new XMLHttpRequest();
+  var body = "secret=\"6LddIw4TAAAAAOVHSpDTsbUisOkUmnBMJy84LDBk\"&response="+req.body['g-recaptcha-response'];
+  xmlHttp.open("POST", "https://www.google.com/recaptcha/api/siteverify?"+body, false); // true for asynchronous 
+  xmlHttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+  xmlHttp.send(null);
+  var gres = xmlHttp.responseText;
+  console.log(gres)
+
+  if (!gres.success){
+      res.redirect('back');
+  }
+
+  if (crazy_rating < 0 || crazy_rating > 10){
+      res.redirect('back');
+  }  
+  if (hot_rating < 0 || hot_rating > 10){
+      res.redirect('back');
+  }
+
   //if(typeof array != "undefined" && array != null && array.length > 0){}
   comments = comments.replace(/"/g, "");
   comments = comments.replace(/'/g, "");
   
-  sqlRequest = "INSERT INTO 'ratings' (comments, ip, display_name, username, site, crazy_rating, hot_rating, timestamp) " +
-               "VALUES('" + comments + "', '" + ip + "', '" + display_name + "', '" + username + "', '" + site  +  "', '" + crazy_rating + "', '" + hot_rating + "', datetime())";
-  
-  console.log(sqlRequest);
-  db.run(sqlRequest, function(err) {
-    if(err !== null) {
-      console.log(err);
-      next(err);
-    } else {
-      res.redirect('back');
-    }
+  ratings.create({ comments: comments,
+   ip: ip,
+   display_name: display_name, 
+   username: username, 
+   site: site, 
+   crazy_rating: crazy_rating, 
+   hot_rating: hot_rating, 
+   timestamp: new Date() }).then(function(rating) {
+    // you can now access the newly created task via the variable task
   });
 }, listusr);
 
