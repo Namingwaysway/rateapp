@@ -2,6 +2,7 @@ extends layout
 
 block content
   h1= title
+  script(src = "https://www.google.com/recaptcha/api.js")
   #spacer(style = "height: 50px")
   #main_box(style = "width: 80%; margin: auto;")
 
@@ -27,7 +28,7 @@ block content
                               position: relative; \
                               text-align: right;")
             span(style="float:left;") #{rating.display_name}
-            span(style="text-align:right;") Looks: #{rating.hot_rating}/10 - #{rating.crazy_rating}/10
+            span(style="text-align:right;") Looks/Personality: #{rating.hot_rating}/10 - #{rating.crazy_rating}/10
         .panel-body.height(style="text-align: left ;")
           |#{rating.comments}
       br
@@ -43,19 +44,20 @@ block content
           |Comment
       .panel-body.height(style="text-align: left;")
         label(for='crazy_rating') Looks [out of 10]:
-        input(type='text',name='crazy_rating',id='crazy_rating',max_length='2',size='2',style='width:2em;')
+        input(type='text',name='crazy_rating',id='crazy_rating', value='0',max_length='2',size='2',style='width:2em;')
 
         br
         label(for='hot_rating') Personality [out of 10]:
-        input(type='text',name='hot_rating',id='hot_rating',max_length='2',size='2')  
+        input(type='text',name='hot_rating',id='hot_rating', value='0',max_length='2',size='2')  
 
         p
         label(for='comments') Comments:
-        textarea(name='comments',id='comments', rows='5', cols='50')  
+        textarea(name='comments',id='comments',value='None.', rows='5', cols='50')  
 
         p
         label(for='display_name') How your rating appears:
-        input(type='text',name='display_name',id='display_name')  
-
+        input(type='text',name='display_name', value='Anonymous',id='display_name')  
         p
-        input(type='submit',name='submit',id='submit', value="Rate!").
+        div(class="g-recaptcha",data-sitekey="6LddIw4TAAAAAKijSevbcX-O7ngJJ0Oy5uZTDG14")
+        p
+        input(type='submit',name='submit',id='submit', value="Rate!")
