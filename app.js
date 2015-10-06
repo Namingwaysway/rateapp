@@ -4,8 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('cozy.db');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -13,36 +11,6 @@ var users = require('./routes/users');
 var app = express();
 
 app.set('port', process.env.PORT || 80);
-
-// Database initialization
-db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='ratings'",
-       function(err, rows) {
-  if(err !== null) {
-    console.log(err);
-  }
-  else if(rows === undefined) {
-    db.run('CREATE TABLE "ratings" ' +
-           '("id" INTEGER PRIMARY KEY AUTOINCREMENT, ' +
-           '"ip" VARCHAR(255), ' +
-           '"username" VARCHAR(255), ' +
-           '"site" VARCHAR(255), ' +
-           '"crazy_rating" INTEGER, ' +
-           '"hot_rating" INTEGER, ' +
-           '"timestamp" INTEGER, ' +
-           '"display_name" VARCHAR(255), ' +
-           'comments VARCHAR(1024))', function(err) {
-      if(err !== null) {
-        console.log(err);
-      }
-      else {
-        console.log("SQL Table 'ratings' initialized.");
-      }
-    });
-  }
-  else {
-    console.log("SQL Table 'ratings' already initialized.");
-  }
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
