@@ -67,6 +67,8 @@ function listusr(req, res){
               average_hot/=row.length;
               average_pers/=row.length;
             }
+            average_hot = Math.round( average_hot * 10 ) / 10;
+            average_pers = Math.round( average_pers * 10 ) / 10;
             console.log(average_pers);
             console.log(average_hot);
             res.render('view.jade', {img_url: url, ratings: row, username: arr[0].toLowerCase(), site: arr[1].toLowerCase(), average_hot: average_hot, average_pers: average_pers}, function(err, html) {
