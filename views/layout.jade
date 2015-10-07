@@ -8,7 +8,9 @@ html( lang="en" )
         meta( name='viewport', content='width=device-width, initial-scale=1.0' )
         meta( name='description', content='Baking Bootstrap Snippets with Jade' )
         //- Bootswatch Theme
-        link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/flatly/bootstrap.min.css", rel="stylesheet")
+        link(href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/flatly/bootstrap.min.css", rel="stylesheet")
+        link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css')
+        link(rel='stylesheet', href='/stylesheets/style.css')
         style.
           html { 
             background: url(images/bg_alt.jpg) no-repeat center center fixed; 
@@ -33,8 +35,8 @@ html( lang="en" )
 
     body(style="background-color: transparent;")
       .container(style="background:transparent;")
-      script( src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' )
-      script( src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js' )
+      script( src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' )
+      script( src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js' )
       .navbar.navbar-default.navbar-fixed-top(role='navigation')
         .container
           .navbar-header
