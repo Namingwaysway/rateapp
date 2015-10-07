@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 });
 
 function index_error(req, res, err, next){
-  sites = ['OKCupid','Hinge','Match']
+  sites = ['OKCupid','Hinge','Match','POF','Tinder', 'Zoosk', 'eHarmony', 'Lovestruck', 'AshleyMadison', 'Mysinglefriend']
   ratings.findAll({ limit: 10, order: 'timestamp DESC', where: {
                                                         comments:{$notLike: 'None.'},
                                                         comments:{$notLike: ''},
